@@ -1,13 +1,10 @@
 # **AsposeConverter2Pdf**
----
 This an easy wrapper for Aspose Java libraries which you must buy.
 Convert MS Office documents and images to pdf documents.
 
 ## Input formats
----
 This library supports formats: doc, docx, xls, xlsx, ppt, pptx, rtf, odt, png, bmp, jpeg, jp2, jpf, tif.
 ## Using
----
 You can use this code for converting input document to pdf. False in constructor is a test mode for Aspose.
 ```html
 Converter2Pdf converter = new AsposeConverter2Pdf(false);
