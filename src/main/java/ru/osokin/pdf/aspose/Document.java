@@ -26,6 +26,18 @@ public class Document implements Converter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Document.class);
     /** Qualifier of content type of input stream. */
     private static final Qualifier QUALIFIER = new TikaQualifier();
+    /** Error const message. */
+    private static final String COULD_NOT_CONVERT_FILE_TO_PDF = "Could not convert file to pdf";
+    /** Error const message. */
+    static final String NOT_SUPPORTED_FILE_FORMAT = "Not supported file format";
+    /** Error const message. */
+    static final String NULL_INPUT_FILE = "Null input file";
+    /** Error const message. */
+    static final String EMPTY_INPUT_FILE = "Empty input file";
+    /** Warning const message. */
+    static final String EQUALS_RESULT_PDF = "Not convert PDF to PDF. Result equals input pdf";
+    /** RTF format of file. */
+    private static final String RTF = "rtf";
     /** License that needs for converting to PDF. */
     private final License asposeLicense;
 
@@ -47,32 +59,32 @@ public class Document implements Converter {
     @SuppressWarnings("UnstableApiUsage")
     public final ConvertResult convert(final InputStream from) {
         if (from == null) {
-            return new ConvertResult(false, "Null input file");
+            return new ConvertResult(false, NULL_INPUT_FILE);
         }
         try {
             byte[] inputBytes = IOUtils.toByteArray(from);
             if (inputBytes.length == 0) {
-                return new ConvertResult(false, "Empty input file");
+                return new ConvertResult(false, EMPTY_INPUT_FILE);
             }
             MediaType mediaType = QUALIFIER.getContentType(new ByteArrayInputStream(inputBytes));
             InputStream streamForConvert = new ByteArrayInputStream(inputBytes);
             if (mediaType.is(MediaType.PDF)) {
-                return new ConvertResult(inputBytes, "Not convert PDF to PDF. Result equals input pdf");
+                return new ConvertResult(inputBytes, EQUALS_RESULT_PDF);
             } else if (mediaType.is(MediaType.ANY_IMAGE_TYPE)) {
-                return convertImage2Pdf(new ByteArrayInputStream(inputBytes));
+                return convertImage2Pdf(streamForConvert);
             } else if (mediaType.is(MediaType.OPENDOCUMENT_TEXT) || mediaType.is(MediaType.MICROSOFT_WORD)
-                    || mediaType.is(MediaType.OOXML_DOCUMENT) || mediaType.subtype().equals("rtf")) {
-                return convertWordsDocument2Pdf(new ByteArrayInputStream(inputBytes));
+                    || mediaType.is(MediaType.OOXML_DOCUMENT) || mediaType.subtype().equals(RTF)) {
+                return convertWordsDocument2Pdf(streamForConvert);
             } else if (mediaType.is(MediaType.OOXML_SHEET) || mediaType.is(MediaType.MICROSOFT_EXCEL)) {
-                return convertCellsDocument2Pdf(new ByteArrayInputStream(inputBytes));
+                return convertCellsDocument2Pdf(streamForConvert);
             } else if (mediaType.is(MediaType.OOXML_PRESENTATION) || mediaType.is(MediaType.MICROSOFT_POWERPOINT)) {
-                return convertPresentationDocument2Pdf(new ByteArrayInputStream(inputBytes));
+                return convertPresentationDocument2Pdf(streamForConvert);
             } else {
-                return new ConvertResult(false, "Not supported file format");
+                return new ConvertResult(false, NOT_SUPPORTED_FILE_FORMAT);
             }
         } catch (Exception | Error e) {
-            LOGGER.error("Could not convert file to pdf", e);
-            return new ConvertResult(false, "Could not convert file to pdf");
+            LOGGER.error(COULD_NOT_CONVERT_FILE_TO_PDF, e);
+            return new ConvertResult(false, COULD_NOT_CONVERT_FILE_TO_PDF);
         }
     }
 

@@ -27,23 +27,31 @@ public class DocumentTest {
     public void convertNull2Pdf() {
         ConvertResult result = document.convert(null);
         assertFalse(result.success());
+        assertEquals(Document.NULL_INPUT_FILE, result.resultMessage());
     }
 
     @Test
-    public void convertEmpty2Pdf() throws IOException {
-        assertFalse(convert2Pdf("/doc-examples/empty.txt", getTempFile("txt")));
+    public void convertEmpty2Pdf() {
+        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/empty.txt"));
+        assertFalse(result.success());
+        assertEquals(Document.EMPTY_INPUT_FILE, result.resultMessage());
     }
 
     @Test
-    public void convertText2Pdf() throws IOException {
-        assertFalse(convert2Pdf("/doc-examples/test.txt", getTempFile("txt")));
+    public void convertText2Pdf() {
+        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/test.txt"));
+        assertFalse(result.success());
+        assertEquals(Document.NOT_SUPPORTED_FILE_FORMAT, result.resultMessage());
     }
 
     @Test
     public void convertPdf2Pdf() throws IOException {
         File resultFile = getTempFile("pdf");
         File inputFile = new File("src/test/resources/doc-examples/test.pdf");
-        assertTrue(convert2Pdf("/doc-examples/test.pdf", resultFile));
+        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/test.pdf"));
+        assertTrue(result.success());
+        assertEquals(Document.EQUALS_RESULT_PDF, result.resultMessage());
+        FileUtils.writeByteArrayToFile(resultFile, result.pdfDocument());
         assertEquals(inputFile.length(), resultFile.length());
     }
 
