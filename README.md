@@ -1,6 +1,9 @@
 # **AsposeConverter2Pdf**
-This an easy wrapper for Aspose Java libraries which you must buy.
-Convert MS Office documents and images to pdf documents.
+This is an easy wrapper for Aspose Java libraries which you must buy.
+This library converts MS Office documents and images to pdf documents in the best quality for Java.
+ 
+**This is especially true for complex tables.** Other libraries could not do this with 
+sufficient quality.
 
 ## Input formats
 This library supports formats: doc, docx, xls, xlsx, ppt, pptx, rtf, odt, png, bmp, jpeg, jp2, jpf, tif.
