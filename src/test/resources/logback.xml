@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="PROJECT_NAME" value="AsposeConverter2Pdf" />
+    <property name="LOG_DIR" value="/u01/logs" />
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <appender name="FILE-AUDIT"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${PROJECT_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%date [${PROJECT_NAME}] [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archived/${PROJECT_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date [${PROJECT_NAME}] [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
