@@ -1,7 +1,6 @@
 package ru.osokin.pdf.aspose;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /** Converter interface for transformation from someting to someting.
  * @author Osokin Alexander
@@ -10,8 +9,7 @@ import java.io.OutputStream;
 interface Converter {
     /** Convert document.
      *  @param from from one stream (file, bytes)
-     *  @param to to other stream (file, bytes)
-     *  @return success of convertion
+     *  @return success of convertion and result pdf document
      */
-    boolean convert(InputStream from, OutputStream to);
+    ConvertResult convert(InputStream from);
 }

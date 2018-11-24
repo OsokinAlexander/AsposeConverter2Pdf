@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /** Document that can convert from some formats to PDF.
  * @author Osokin Alexander
@@ -29,7 +29,7 @@ public class Document implements Converter {
     /** License that needs for converting to PDF. */
     private final License asposeLicense;
 
-    /** Create Document with default Aspose license. */
+    /** Create Document with default test Aspose license. */
     public Document() {
         this.asposeLicense = new AsposeLicense();
     }
@@ -44,76 +44,79 @@ public class Document implements Converter {
     /** {@inheritDoc}
      * Output PDF documents will be have little damage without initialize of any license. */
     @Override
-    public final boolean convert(final InputStream from, OutputStream to) {
+    @SuppressWarnings("UnstableApiUsage")
+    public final ConvertResult convert(final InputStream from) {
         if (from == null) {
-            LOGGER.error("Null input file");
-            return false;
+            return new ConvertResult(false, "Null input file");
         }
         try {
             byte[] inputBytes = IOUtils.toByteArray(from);
             if (inputBytes.length == 0) {
-                LOGGER.error("Empty input file");
-                return false;
+                return new ConvertResult(false, "Empty input file");
             }
             MediaType mediaType = QUALIFIER.getContentType(new ByteArrayInputStream(inputBytes));
+            InputStream streamForConvert = new ByteArrayInputStream(inputBytes);
             if (mediaType.is(MediaType.PDF)) {
-                LOGGER.info("Not convert PDF to PDF. Output equals input pdf");
-                IOUtils.copy(new ByteArrayInputStream(inputBytes), to);
+                return new ConvertResult(inputBytes, "Not convert PDF to PDF. Result equals input pdf");
             } else if (mediaType.is(MediaType.ANY_IMAGE_TYPE)) {
-                convertImage2Pdf(new ByteArrayInputStream(inputBytes), to);
+                return convertImage2Pdf(new ByteArrayInputStream(inputBytes));
             } else if (mediaType.is(MediaType.OPENDOCUMENT_TEXT) || mediaType.is(MediaType.MICROSOFT_WORD)
                     || mediaType.is(MediaType.OOXML_DOCUMENT) || mediaType.subtype().equals("rtf")) {
-                convertWordsDocument2Pdf(new ByteArrayInputStream(inputBytes), to);
+                return convertWordsDocument2Pdf(new ByteArrayInputStream(inputBytes));
             } else if (mediaType.is(MediaType.OOXML_SHEET) || mediaType.is(MediaType.MICROSOFT_EXCEL)) {
-                convertCellsDocument2Pdf(new ByteArrayInputStream(inputBytes), to);
+                return convertCellsDocument2Pdf(new ByteArrayInputStream(inputBytes));
             } else if (mediaType.is(MediaType.OOXML_PRESENTATION) || mediaType.is(MediaType.MICROSOFT_POWERPOINT)) {
-                convertPresentationDocument2Pdf(new ByteArrayInputStream(inputBytes), to);
+                return convertPresentationDocument2Pdf(new ByteArrayInputStream(inputBytes));
             } else {
-                LOGGER.error("Not supported file format");
-                return false;
+                return new ConvertResult(false, "Not supported file format");
             }
         } catch (Exception | Error e) {
             LOGGER.error("Could not convert file to pdf", e);
-            return false;
+            return new ConvertResult(false, "Could not convert file to pdf");
         }
-        return true;
     }
 
     /** Convert doc, docx, odt, rtf documents to PDF.
      * @param inputStream input stream (file, bytes)
-     * @param outputStream PDF stream (file, bytes)
+     * @return result of conversion
      * @throws Exception generate Aspose library
      */
-    private void convertWordsDocument2Pdf(final InputStream inputStream, OutputStream outputStream) throws Exception {
+    private ConvertResult convertWordsDocument2Pdf(final InputStream inputStream) throws Exception {
         com.aspose.words.Document doc = new com.aspose.words.Document(inputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream, com.aspose.words.SaveFormat.PDF);
+        return new ConvertResult(outputStream.toByteArray());
     }
 
     /** Convert xls, xlsx documents to PDF.
      * @param inputStream input stream (file, bytes)
-     * @param outputStream PDF stream (file, bytes)
+     * @return result of conversion
      * @throws Exception generate Aspose library
      */
-    private void convertCellsDocument2Pdf(final InputStream inputStream, OutputStream outputStream) throws Exception {
+    private ConvertResult convertCellsDocument2Pdf(final InputStream inputStream) throws Exception {
         Workbook workbook = new Workbook(inputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.save(outputStream, SaveFormat.PDF);
+        return new ConvertResult(outputStream.toByteArray());
     }
 
     /** Convert ppt, pptx documents to PDF.
      * @param inputStream input stream (file, bytes)
-     * @param outputStream PDF stream (file, bytes)
+     * @return result of conversion
      */
-    private void convertPresentationDocument2Pdf(final InputStream inputStream, OutputStream outputStream) {
+    private ConvertResult convertPresentationDocument2Pdf(final InputStream inputStream) {
         Presentation presentation = new Presentation(inputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         presentation.save(outputStream, com.aspose.slides.SaveFormat.Pdf);
+        return new ConvertResult(outputStream.toByteArray());
     }
 
     /** Convert images bmp, png, jpg, JPEG2000 (jp2, jpf) to PDF.
      * @param inputStream input stream (file, bytes)
-     * @param outputStream PDF stream (file, bytes)
+     * @return result of conversion
      * @throws IOException generate bad inputStream
      */
-    private void convertImage2Pdf(final InputStream inputStream, OutputStream outputStream) throws IOException {
+    private ConvertResult convertImage2Pdf(final InputStream inputStream) throws IOException {
         com.aspose.pdf.Document doc = new com.aspose.pdf.Document();
         Page page = doc.getPages().add();
         page.getPageInfo().getMargin().setBottom(0);
@@ -125,6 +128,8 @@ public class Document implements Converter {
         Image image = new Image();
         image.setBufferedImage(bufferedImage);
         page.getParagraphs().add(image);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
+        return new ConvertResult(outputStream.toByteArray());
     }
 }

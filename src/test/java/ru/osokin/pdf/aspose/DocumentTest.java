@@ -1,5 +1,6 @@
 package ru.osokin.pdf.aspose;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,18 +13,20 @@ import static org.junit.Assert.assertTrue;
 public class DocumentTest {
 
     private Document document = new Document();
-    private License license = new AsposeLicense();
     private final boolean isDeleteTempFile = true;
 
     @Before
     public void before() {
+//        License license = new AsposeLicense();
 //        license.setTotal(DocumentTest.class.getResourceAsStream("/aspose-license/Aspose.Total.Java.lic"));
+//        document = new Document(license);
     }
 
 
     @Test
-    public void convertNull2Pdf() throws IOException {
-        assertFalse(convert2Pdf((InputStream) null, getTempFile("txt")));
+    public void convertNull2Pdf() {
+        ConvertResult result = document.convert(null);
+        assertFalse(result.success());
     }
 
     @Test
@@ -166,11 +169,11 @@ public class DocumentTest {
         return tempFile;
     }
 
-    private boolean convert2Pdf(String resourceFile, File resultFile) throws FileNotFoundException {
-        return convert2Pdf(DocumentTest.class.getResourceAsStream(resourceFile), resultFile);
-    }
-
-    private boolean convert2Pdf(InputStream resourceStream, File resultFile) throws FileNotFoundException {
-        return document.convert(resourceStream, new FileOutputStream(resultFile));
+    private boolean convert2Pdf(String resourceFile, File resultFile) throws IOException {
+        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream(resourceFile));
+        if (result.success()) {
+            FileUtils.writeByteArrayToFile(resultFile, result.pdfDocument());
+        }
+        return result.success();
     }
 }

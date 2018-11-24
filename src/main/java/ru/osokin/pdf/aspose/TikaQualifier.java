@@ -14,12 +14,13 @@ import java.io.InputStream;
  * @author Osokin Alexander
  * @since 1.0
  */
-public class TikaQualifier implements Qualifier {
+class TikaQualifier implements Qualifier {
     /** Slf4j logger. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TikaQualifier.class);
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public final MediaType getContentType(final InputStream inputStream) {
         ContentHandler contenthandler = new BodyContentHandler();
         Metadata metadata = new Metadata();
