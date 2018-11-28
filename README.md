@@ -8,6 +8,18 @@ sufficient quality.
 ## Input formats
 This library supports formats: doc, docx, xls, xlsx, ppt, pptx, rtf, odt, png, bmp, jpeg, jp2, jpf, tif.
 
+## Dependency
+Download library from releases.
+Install it into your maven, gradle or other builder.
+Example dependency for maven:
+```html
+<dependency>
+    <groupId>ru.osokin</groupId>
+        <artifactId>aspose-converter2pdf</artifactId>
+        <version>1.0</version>
+</dependency>
+```
+
 ## Using
 You can use this code for converting input document to pdf. Empty document constructor is a test mode for Aspose libraries.
 ```html
