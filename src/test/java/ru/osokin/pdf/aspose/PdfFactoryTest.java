@@ -10,47 +10,47 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DocumentTest {
+public class PdfFactoryTest {
 
-    private Document document = new Document();
+    private PdfFactory pdfFactory = new PdfFactory();
     private final boolean isDeleteTempFile = true;
 
     @Before
     public void before() {
 //        License license = new AsposeLicense();
-//        license.setTotal(DocumentTest.class.getResourceAsStream("/aspose-license/Aspose.Total.Java.lic"));
-//        document = new Document(license);
+//        license.setTotal(PdfFactoryTest.class.getResourceAsStream("/aspose-license/Aspose.Total.Java.lic"));
+//        pdfFactory = new PdfFactory(license);
     }
 
 
     @Test
     public void convertNull2Pdf() {
-        ConvertResult result = document.convert(null);
+        ConvertResult result = pdfFactory.convert(null);
         assertFalse(result.success());
-        assertEquals(Document.NULL_INPUT_FILE, result.resultMessage());
+        assertEquals(PdfFactory.NULL_INPUT_FILE, result.resultMessage());
     }
 
     @Test
     public void convertEmpty2Pdf() {
-        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/empty.txt"));
+        ConvertResult result = pdfFactory.convert(PdfFactoryTest.class.getResourceAsStream("/doc-examples/empty.txt"));
         assertFalse(result.success());
-        assertEquals(Document.EMPTY_INPUT_FILE, result.resultMessage());
+        assertEquals(PdfFactory.EMPTY_INPUT_FILE, result.resultMessage());
     }
 
     @Test
     public void convertText2Pdf() {
-        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/test.txt"));
+        ConvertResult result = pdfFactory.convert(PdfFactoryTest.class.getResourceAsStream("/doc-examples/test.txt"));
         assertFalse(result.success());
-        assertEquals(Document.NOT_SUPPORTED_FILE_FORMAT, result.resultMessage());
+        assertEquals(PdfFactory.NOT_SUPPORTED_FILE_FORMAT, result.resultMessage());
     }
 
     @Test
     public void convertPdf2Pdf() throws IOException {
         File resultFile = getTempFile("pdf");
         File inputFile = new File("src/test/resources/doc-examples/test.pdf");
-        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream("/doc-examples/test.pdf"));
+        ConvertResult result = pdfFactory.convert(PdfFactoryTest.class.getResourceAsStream("/doc-examples/test.pdf"));
         assertTrue(result.success());
-        assertEquals(Document.EQUALS_RESULT_PDF, result.resultMessage());
+        assertEquals(PdfFactory.EQUALS_RESULT_PDF, result.resultMessage());
         FileUtils.writeByteArrayToFile(resultFile, result.pdfDocument());
         assertEquals(inputFile.length(), resultFile.length());
     }
@@ -178,7 +178,7 @@ public class DocumentTest {
     }
 
     private boolean convert2Pdf(String resourceFile, File resultFile) throws IOException {
-        ConvertResult result = document.convert(DocumentTest.class.getResourceAsStream(resourceFile));
+        ConvertResult result = pdfFactory.convert(PdfFactoryTest.class.getResourceAsStream(resourceFile));
         if (result.success()) {
             FileUtils.writeByteArrayToFile(resultFile, result.pdfDocument());
         }

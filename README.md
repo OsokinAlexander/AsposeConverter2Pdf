@@ -11,8 +11,8 @@ This library supports formats: doc, docx, xls, xlsx, ppt, pptx, rtf, odt, png, b
 ## Using
 You can use this code for converting input document to pdf. Empty document constructor is a test mode for Aspose libraries.
 ```html
-Document document = new Document();
-ConvertResult result = document.convert(inputDocumentStream);
+PdfFactory pdfFactory = new PdfFactory();
+ConvertResult result = pdfFactory.convert(inputDocumentStream);
 if (result.success()) {
     byte[] pdfDocument = result.pdfDocument();
 }
@@ -21,7 +21,7 @@ If you have a Aspose license, you can set it. For example:
 ```html
 License license = new AsposeLicense();
 license.setTotal(inputLicenseSteam);
-Document document = new Document(license);
+PdfFactory pdfFactory = new PdfFactory(license);
 ```
 Also you can look at my tests for all document formats.
 

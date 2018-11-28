@@ -17,13 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/** Document that can convert from some formats to PDF.
+/** PdfFactory that can convert from some formats to PDF.
  * @author Osokin Alexander
  * @since 1.0
  */
-public class Document implements Converter {
+public class PdfFactory implements Converter {
     /** Slf4j logger. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Document.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdfFactory.class);
     /** Qualifier of content type of input stream. */
     private static final Qualifier QUALIFIER = new TikaQualifier();
     /** Error const message. */
@@ -41,15 +41,15 @@ public class Document implements Converter {
     /** License that needs for converting to PDF. */
     private final License asposeLicense;
 
-    /** Create Document with default test Aspose license. */
-    public Document() {
+    /** Create PdfFactory with default test Aspose license. */
+    public PdfFactory() {
         this.asposeLicense = new AsposeLicense();
     }
 
-    /** Create Document with license.
+    /** Create PdfFactory with license.
      * @param license license for production convertion of documents.
      */
-    public Document(final License license) {
+    public PdfFactory(final License license) {
         this.asposeLicense = license;
     }
 
