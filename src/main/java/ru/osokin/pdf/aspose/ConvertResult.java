@@ -4,7 +4,7 @@ package ru.osokin.pdf.aspose;
  * @author Osokin Alexander
  * @since 1.0
  */
-class ConvertResult {
+public class ConvertResult {
     /** Result is successful or not. */
     private final boolean success;
     /** Result pdf document. */
@@ -16,14 +16,14 @@ class ConvertResult {
      * @param result result status
      * @param message error message
      */
-    ConvertResult(final boolean result, final String message) {
+    public ConvertResult(final boolean result, final String message) {
         this(result, null, message);
     }
 
     /** Create result.
      * @param pdfDocument result pdf document
      */
-    ConvertResult(final byte[] pdfDocument) {
+    public ConvertResult(final byte[] pdfDocument) {
         this(pdfDocument, "");
     }
 
@@ -31,7 +31,7 @@ class ConvertResult {
      * @param pdfDocument result pdf document
      * @param message warning message
      */
-    ConvertResult(final byte[] pdfDocument, final String message) {
+    public ConvertResult(final byte[] pdfDocument, final String message) {
         this(true, pdfDocument, message);
     }
 
@@ -49,21 +49,21 @@ class ConvertResult {
     /** Get result status.
      * @return successful flag
      */
-    boolean success() {
+    public final boolean success() {
         return success;
     }
 
     /** Get result pdf document.
      * @return pdf document bytes
      */
-    byte[] pdfDocument() {
+    public final byte[] pdfDocument() {
         return document;
     }
 
     /** Get error or warning of conversion.
      * @return message
      */
-    String resultMessage() {
+    public final String resultMessage() {
         return resultMessage;
     }
 }

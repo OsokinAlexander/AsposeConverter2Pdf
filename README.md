@@ -15,8 +15,8 @@ Example dependency for maven:
 ```html
 <dependency>
     <groupId>ru.osokin</groupId>
-        <artifactId>aspose-converter2pdf</artifactId>
-        <version>1.0</version>
+    <artifactId>aspose-converter2pdf</artifactId>
+    <version>1.0.1</version>
 </dependency>
 ```
 
