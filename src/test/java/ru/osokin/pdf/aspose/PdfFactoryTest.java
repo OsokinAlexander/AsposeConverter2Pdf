@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class PdfFactoryTest {
 
     private PdfFactory pdfFactory = new PdfFactory();
-    private final boolean isDeleteTempFile = true;
+    private final boolean isDeleteTempFile = false;
 
     @Before
     public void before() {
@@ -108,6 +108,13 @@ public class PdfFactoryTest {
     public void convertPng2Pdf() throws IOException {
         File resultFile = getTempFile("png");
         assertTrue(convert2Pdf("/doc-examples/test.png", resultFile));
+        assertTrue(resultFile.length() > 0);
+    }
+
+    @Test
+    public void convertScreenshotPng2Pdf() throws IOException {
+        File resultFile = getTempFile("png");
+        assertTrue(convert2Pdf("/doc-examples/screenshot.png", resultFile));
         assertTrue(resultFile.length() > 0);
     }
 

@@ -71,7 +71,7 @@ public class PdfFactory implements Converter {
             if (mediaType.is(MediaType.PDF)) {
                 return new ConvertResult(inputBytes, EQUALS_RESULT_PDF);
             } else if (mediaType.is(MediaType.ANY_IMAGE_TYPE)) {
-                return convertImage2Pdf(streamForConvert);
+                return convertImage2Pdf(inputBytes);
             } else if (mediaType.is(MediaType.OPENDOCUMENT_TEXT) || mediaType.is(MediaType.MICROSOFT_WORD)
                     || mediaType.is(MediaType.OOXML_DOCUMENT) || mediaType.subtype().equals(RTF)) {
                 return convertWordsDocument2Pdf(streamForConvert);
@@ -124,21 +124,22 @@ public class PdfFactory implements Converter {
     }
 
     /** Convert images bmp, png, jpg, JPEG2000 (jp2, jpf) to PDF.
-     * @param inputStream input stream (file, bytes)
+     * @param inputBytes input bytes
      * @return result of conversion
      * @throws IOException generate bad inputStream
      */
-    private ConvertResult convertImage2Pdf(final InputStream inputStream) throws IOException {
+    private ConvertResult convertImage2Pdf(final byte[] inputBytes) throws IOException {
         com.aspose.pdf.Document doc = new com.aspose.pdf.Document();
         Page page = doc.getPages().add();
         page.getPageInfo().getMargin().setBottom(0);
         page.getPageInfo().getMargin().setTop(0);
         page.getPageInfo().getMargin().setLeft(0);
         page.getPageInfo().getMargin().setRight(0);
+        InputStream inputStream = new ByteArrayInputStream(inputBytes);
         BufferedImage bufferedImage = ImageIO.read(inputStream);
         page.getPageInfo().setLandscape(bufferedImage.getWidth() > bufferedImage.getHeight());
         Image image = new Image();
-        image.setBufferedImage(bufferedImage);
+        image.setImageStream(new ByteArrayInputStream(inputBytes));
         page.getParagraphs().add(image);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
